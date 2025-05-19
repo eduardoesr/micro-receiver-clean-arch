@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring-microservice
+    container_name: spring-receiver-microservice
     ports:
       - "8085:8085"
     environment:
