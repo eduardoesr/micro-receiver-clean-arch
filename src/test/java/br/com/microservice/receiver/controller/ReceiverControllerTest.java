@@ -1,6 +1,7 @@
 package br.com.microservice.receiver.controller;
 
 import br.com.microservice.receiver.domain.values_object.Endereco;
+import br.com.microservice.receiver.domain.values_object.MetodoPagamento;
 import br.com.microservice.receiver.domain.values_object.Produto;
 import br.com.microservice.receiver.dto.rest_controller.InputReceiverDTO;
 import br.com.microservice.receiver.usecase.ReceiverUseCase;
@@ -14,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -34,16 +36,18 @@ class ReceiverControllerTest {
 
     @Test
     void forward_deveRetornar201ComBodyQuandoInputValido() throws Exception {
-        List<Produto> produtos = List.of(new Produto("123", 10), new Produto("456", 20));
-        Endereco endereco = new Endereco("20", "Rua Teste", 10, 20);
+        List<Produto> produtos = List.of(new Produto("SKU1", 2), new Produto("SKU2", 1));
+        Endereco endereco = new Endereco("123", "Rua Teste", 100, 200);
+        LocalDateTime dataPedido = LocalDateTime.now();
+
         InputReceiverDTO input = new InputReceiverDTO(
-                produtos,
-                "123456789",
-                "123456789",
-                endereco,
-                BigDecimal.valueOf(10.29)
+                "cliente123",           // idCliente
+                dataPedido,            // dataPedido
+                produtos,              // produtos
+                endereco,              // endereco
+                BigDecimal.valueOf(50), // valorTotal
+                MetodoPagamento.PIX    // metodoPagamento
         );
-        // preencha os campos obrigatórios do DTO conforme necessário
 
         Mockito.when(useCase.forward(any(InputReceiverDTO.class))).thenReturn("ok");
 
@@ -53,23 +57,5 @@ class ReceiverControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string("ok"));
     }
-
-//    @Test
-//    void forward_deveRetornar400QuandoInputInvalido() throws Exception {
-//        InputReceiverDTO input = new InputReceiverDTO(
-//                null, // produtos inválido
-//                null, // cnpj inválido
-//                null, // inscricaoEstadual inválido
-//                null, // endereco inválido
-//                null  // valorTotal inválido
-//        );
-//        // NÃO preencha campos obrigatórios para forçar erro de validação
-//
-//        mockMvc.perform(post("/receiver")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(input)))
-//                .andExpect(status().isBadRequest());
-//    }
-
 
 }
