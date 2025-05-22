@@ -89,6 +89,6 @@ Exemplo de envio:
 Foi realizado testes na API, buscando alcançar mais de 80% de cobertura
 
 <div align="center">
-    <img src="src/main/resources/img/teste.png" width="1466px" height="268px">
+    <img src="src/main/resources/img/teste.png" width="977px" height="179px">
 </div>
 
