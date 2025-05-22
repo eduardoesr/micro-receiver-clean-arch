@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +37,9 @@ class ReceiverControllerTest {
 
     @Test
     void forward_deveRetornar201ComBodyQuandoInputValido() throws Exception {
-        List<Produto> produtos = List.of(new Produto("SKU1", 2), new Produto("SKU2", 1));
+        HashMap<String, Integer> produtos = new HashMap<>();
+        produtos.put("SKU1", 2);
+        produtos.put("SKU2", 1);
         Endereco endereco = new Endereco("123", "Rua Teste", 100, 200);
         LocalDateTime dataPedido = LocalDateTime.now();
 

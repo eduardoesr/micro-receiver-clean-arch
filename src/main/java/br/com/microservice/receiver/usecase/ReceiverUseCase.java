@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -13,27 +12,22 @@ import org.springframework.stereotype.Service;
 public class ReceiverUseCase {
 
     private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper objectMapper;
 
-    @Value("${spring.rabbitmq.username}")
-    private String username;
-
-    @Value("${spring.rabbitmq.password}")
-    private String password;
-
-    public ReceiverUseCase(RabbitTemplate rabbitTemplate) {
+    public ReceiverUseCase(RabbitTemplate rabbitTemplate, ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
+        this.objectMapper = objectMapper;
     }
 
-    // ReceiverDTO
     public String forward(InputReceiverDTO receiverDTO) {
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
             String message = objectMapper.writeValueAsString(receiverDTO);
             String queue = "PedidoQueue";
             rabbitTemplate.convertAndSend(queue, message);
             return "Mensagem enviada com sucesso!";
         } catch (JsonProcessingException e) {
-            return "Erro ao enviar a mensagem.";
+            log.info("Erro ao transformar a mensagem em JSON: {}.", e.getMessage());
+            return "Houve um erro ao criar o pedido.";
         }
     }
 }

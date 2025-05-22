@@ -6,12 +6,13 @@ import br.com.microservice.receiver.domain.values_object.Produto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 
 public record InputReceiverDTO(
-        String idCliente,
+        String clienteId,
         LocalDateTime dataCriacao,
-        List<Produto> produtos,
+        HashMap<String, Integer> produtos,
         Endereco enderecoEntrega,
         BigDecimal frete,
         MetodoPagamento metodoPagamento
